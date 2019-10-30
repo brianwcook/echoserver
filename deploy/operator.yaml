@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echoserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: echoserver
+  template:
+    metadata:
+      labels:
+        name: echoserver
+    spec:
+      serviceAccountName: echoserver
+      containers:
+        - name: echoserver
+          # Replace this with the built image name
+          image: REPLACE_IMAGE
+          command:
+          - echoserver
+          imagePullPolicy: Always
+          env:
+            - name: WATCH_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: OPERATOR_NAME
+              value: "echoserver"
